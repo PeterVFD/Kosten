@@ -1,12 +1,1016 @@
-
 <!DOCTYPE html>
-<html>
+<html lang="de">
 <head>
-  <meta charset="UTF-8">
-  <title>Meine App</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kostenübersicht</title>
+  <style>
+    :root{
+      --bg:#d2d2d2;
+      --text:#0000ff;
+      --border:#9c9c9c;
+      --white:#ffffff;
+      --danger:#c62828;
+      --success:#2e7d32;
+      --secondary:#546e7a;
+      --shadow:0 2px 8px rgba(0,0,0,.08);
+    }
+
+    * { box-sizing: border-box; }
+
+    body{
+      margin:0;
+      padding:20px;
+      background:var(--bg);
+      color:var(--text);
+      font-family:"Segoe UI", Arial, sans-serif;
+    }
+
+    .container{
+      max-width:1100px;
+      margin:0 auto;
+    }
+
+    .card{
+      background:rgba(255,255,255,.55);
+      border:1px solid var(--border);
+      border-radius:10px;
+      padding:18px;
+      box-shadow:var(--shadow);
+      margin-bottom:18px;
+    }
+
+    h1, h2, h3{
+      margin:0 0 16px 0;
+      color:var(--text);
+    }
+
+    .form-grid{
+      display:grid;
+      grid-template-columns: 140px 1fr 220px;
+      gap:12px 14px;
+      align-items:start;
+    }
+
+    label{
+      font-weight:600;
+      padding-top:8px;
+    }
+
+    input, select, button{
+      font:inherit;
+    }
+
+    input[type="date"],
+    input[type="text"],
+    select{
+      width:100%;
+      padding:10px 12px;
+      border:1px solid var(--border);
+      border-radius:8px;
+      background:#fff;
+      color:#000;
+      outline:none;
+    }
+
+    input:disabled{
+      background:#efefef;
+      color:#666;
+    }
+
+    .btn-col{
+      display:flex;
+      flex-direction:column;
+      gap:10px;
+    }
+
+    button{
+      padding:10px 14px;
+      border:none;
+      border-radius:8px;
+      cursor:pointer;
+      color:#fff;
+      box-shadow:var(--shadow);
+      transition:transform .05s ease, opacity .2s ease;
+    }
+
+    button:hover{ opacity:.95; }
+    button:active{ transform:translateY(1px); }
+
+    .success{ background:var(--success); }
+    .danger{ background:var(--danger); }
+    .secondary{ background:var(--secondary); }
+    .primary{ background:#0d47a1; }
+
+    .hidden{
+      display:none !important;
+    }
+
+    .type-add-box{
+      margin-top:8px;
+      display:grid;
+      grid-template-columns: 1fr 160px 160px;
+      gap:8px;
+    }
+
+    .info-row{
+      display:flex;
+      gap:20px;
+      align-items:center;
+      flex-wrap:wrap;
+      margin-top:6px;
+    }
+
+    .zwischenstand{
+      font-size:20px;
+      font-weight:700;
+      min-width:140px;
+      text-align:right;
+      color:#000;
+    }
+
+    .diff{
+      font-size:14px;
+      min-height:20px;
+    }
+
+    .toolbar{
+      display:flex;
+      gap:10px;
+      flex-wrap:wrap;
+      margin-bottom:12px;
+    }
+
+    table{
+      width:100%;
+      border-collapse:collapse;
+      background:var(--white);
+      color:#000;
+      border-radius:8px;
+      overflow:hidden;
+    }
+
+    th, td{
+      border:1px solid #ccc;
+      padding:8px 10px;
+      text-align:right;
+      vertical-align:middle;
+    }
+
+    th{
+      background:#efefef;
+      color:#000;
+    }
+
+    td.left, th.left{
+      text-align:left;
+    }
+
+    tbody tr{
+      cursor:pointer;
+    }
+
+    tbody tr:hover{
+      background:#f5f9ff;
+    }
+
+    tbody tr.selected{
+      background:#dbeafe;
+    }
+
+    .saldo-box{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:16px;
+      font-size:28px;
+      font-weight:700;
+      color:#0000cc;
+      flex-wrap:wrap;
+    }
+
+    .small{
+      font-size:13px;
+      color:#222;
+    }
+
+    .hint{
+      margin-top:10px;
+      font-size:13px;
+      color:#333;
+    }
+
+    .type-list{
+      margin-top:10px;
+      background:#fff;
+      border:1px solid #ccc;
+      border-radius:8px;
+      padding:10px;
+      color:#000;
+      font-size:14px;
+    }
+
+    .type-chip{
+      display:inline-block;
+      margin:4px 6px 0 0;
+      padding:5px 8px;
+      border-radius:14px;
+      background:#eef3ff;
+      border:1px solid #c7d6ff;
+    }
+
+    @media (max-width: 900px){
+      .form-grid{
+        grid-template-columns: 1fr;
+      }
+
+      .btn-col{
+        flex-direction:row;
+        flex-wrap:wrap;
+      }
+
+      .type-add-box{
+        grid-template-columns: 1fr;
+      }
+
+      .saldo-box{
+        font-size:22px;
+      }
+
+      table{
+        font-size:14px;
+      }
+    }
+
+    @media print{
+      body{
+        background:#fff;
+        padding:0;
+      }
+
+      .no-print{
+        display:none !important;
+      }
+
+      .print-card{
+        border:none;
+        box-shadow:none;
+        padding:0;
+        background:#fff;
+      }
+    }
+  </style>
 </head>
 <body>
-  <h1>Hallo Peter 👋</h1>
-  <p>Deine App läuft jetzt online!</p>
+  <div class="container">
+
+    <div class="card no-print">
+      <h1>Neue Position</h1>
+
+      <div class="form-grid">
+        <label for="itemDatum">Datum:</label>
+        <div>
+          <input type="date" id="itemDatum" />
+        </div>
+        <div class="btn-col">
+          <button id="btnAdd" class="success">+ Hinzufügen</button>
+          <button id="btnCancel" class="secondary hidden">Bearbeitung abbrechen</button>
+        </div>
+
+        <label for="itemName">Bezeichnung:</label>
+        <div>
+          <input type="text" id="itemName" placeholder="Bezeichnung eingeben" />
+        </div>
+        <div></div>
+
+        <label for="itemTyp">Typ:</label>
+        <div>
+          <select id="itemTyp"></select>
+
+          <div class="type-add-box">
+            <input type="text" id="newTyp" placeholder="Neuen Typ eingeben" />
+            <select id="newTypMode">
+              <option value="positive">positiv</option>
+              <option value="negative" selected>negativ</option>
+            </select>
+            <button type="button" id="btnAddTyp" class="secondary">Typ hinzufügen</button>
+          </div>
+
+          <div class="type-list" id="typeList"></div>
+        </div>
+        <div></div>
+
+        <label for="itemBetrag">Betrag (€):</label>
+        <div>
+          <input type="text" id="itemBetrag" placeholder="z. B. 10,00" />
+        </div>
+        <div></div>
+
+        <label for="itemMahn">Mahngebühr (€):</label>
+        <div>
+          <input type="text" id="itemMahn" placeholder="z. B. 2,50" disabled />
+        </div>
+        <div></div>
+
+        <label>Zwischenstand:</label>
+        <div class="info-row">
+          <div id="txtZwischen" class="zwischenstand">0,00 €</div>
+          <div id="txtDiff" class="diff"></div>
+        </div>
+        <div></div>
+      </div>
+    </div>
+
+    <div class="card no-print">
+      <div class="toolbar">
+        <button id="btnDelete" class="danger">Löschen</button>
+        <button id="btnClear" class="danger">Alles leeren</button>
+        <button id="btnPdf" class="primary">PDF erstellen</button>
+        <button id="btnExportCsv" class="secondary">CSV exportieren</button>
+        <button id="btnImportCsv" class="secondary">CSV importieren</button>
+        <input type="file" id="csvFile" accept=".csv,text/csv" class="hidden" />
+      </div>
+
+      <table>
+        <thead>
+          <tr>
+            <th>Datum</th>
+            <th class="left">Bezeichnung</th>
+            <th>Typ</th>
+            <th>Betrag</th>
+            <th>Mahnung</th>
+            <th>Rechenwert</th>
+            <th>Stand</th>
+          </tr>
+        </thead>
+        <tbody id="tableBody"></tbody>
+      </table>
+
+      <div class="hint">
+        Klick = markieren | Doppelklick = bearbeiten
+      </div>
+    </div>
+
+    <div class="card print-card">
+      <div class="saldo-box">
+        <div>KONTO-SALDO:</div>
+        <div id="anzeigeSumme">0,00 €</div>
+      </div>
+      <div class="small no-print">
+        Daten und Typen werden automatisch im Browser gespeichert.
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    const STORAGE_KEY = "kostenuebersicht_daten_v2";
+    const TYPES_KEY   = "kostenuebersicht_typen_v2";
+
+    const defaultTypes = [
+      { name: "Aufladung",        mode: "positive" },
+      { name: "Erstattung",       mode: "positive" },
+      { name: "Restguthaben",     mode: "positive" },
+      { name: "DrittAnbieter",    mode: "negative" },
+      { name: "Kosten",           mode: "negative" },
+      { name: "Tarif/Option",     mode: "negative" },
+      { name: "Transfer",         mode: "negative" },
+      { name: "Ruecklastschrift", mode: "fee" }
+    ];
+
+    let items = [];
+    let typeDefs = [];
+    let editIndex = -1;
+    let selectedIndex = -1;
+
+    const itemDatum    = document.getElementById("itemDatum");
+    const itemName     = document.getElementById("itemName");
+    const itemTyp      = document.getElementById("itemTyp");
+    const itemBetrag   = document.getElementById("itemBetrag");
+    const itemMahn     = document.getElementById("itemMahn");
+    const txtZwischen  = document.getElementById("txtZwischen");
+    const txtDiff      = document.getElementById("txtDiff");
+    const anzeigeSumme = document.getElementById("anzeigeSumme");
+    const tableBody    = document.getElementById("tableBody");
+
+    const btnAdd       = document.getElementById("btnAdd");
+    const btnCancel    = document.getElementById("btnCancel");
+    const btnDelete    = document.getElementById("btnDelete");
+    const btnClear     = document.getElementById("btnClear");
+    const btnPdf       = document.getElementById("btnPdf");
+    const btnExportCsv = document.getElementById("btnExportCsv");
+    const btnImportCsv = document.getElementById("btnImportCsv");
+    const csvFile      = document.getElementById("csvFile");
+
+    const newTyp       = document.getElementById("newTyp");
+    const newTypMode   = document.getElementById("newTypMode");
+    const btnAddTyp    = document.getElementById("btnAddTyp");
+    const typeList     = document.getElementById("typeList");
+
+    function setToday() {
+      const d = new Date();
+      const yyyy = d.getFullYear();
+      const mm = String(d.getMonth() + 1).padStart(2, "0");
+      const dd = String(d.getDate()).padStart(2, "0");
+      itemDatum.value = `${yyyy}-${mm}-${dd}`;
+    }
+
+    function formatDateDE(isoDate) {
+      if (!isoDate) return "";
+      const p = isoDate.split("-");
+      if (p.length !== 3) return isoDate;
+      return `${p[2]}.${p[1]}.${p[0]}`;
+    }
+
+    function parseDateToISO(deDate) {
+      if (!deDate) return "";
+      const m = String(deDate).trim().match(/^(\d{2})\.(\d{2})\.(\d{4})$/);
+      if (!m) return "";
+      return `${m[3]}-${m[2]}-${m[1]}`;
+    }
+
+    function num(s) {
+      if (s === null || s === undefined) return 0;
+      s = String(s).trim();
+      s = s.replace(/[^\d,.\-]/g, "");
+      s = s.replace(/\./g, "");
+      s = s.replace(",", ".");
+      const n = parseFloat(s);
+      return isNaN(n) ? 0 : n;
+    }
+
+    function euro(v, sign = true) {
+      const neg = Number(v) < 0;
+      const abs = Math.abs(Number(v) || 0);
+      const s = abs.toFixed(2).replace(".", ",");
+      return `${neg && sign ? "-" : ""}${s} €`;
+    }
+
+    function escapeHtml(str) {
+      return String(str ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function getTypeMode(typeName) {
+      const def = typeDefs.find(t => t.name === typeName);
+      return def ? def.mode : "negative";
+    }
+
+    function calcValue(typeName, betrag, mahn) {
+      const mode = getTypeMode(typeName);
+
+      if (mode === "positive") {
+        return Math.abs(betrag);
+      }
+
+      if (mode === "fee" || typeName === "Ruecklastschrift") {
+        return -(Math.abs(betrag) + Math.abs(mahn));
+      }
+
+      return -Math.abs(betrag);
+    }
+
+    function getCurrentSum() {
+      return items.reduce((sum, x) => sum + Number(x.calc || 0), 0);
+    }
+
+    function recalcStands() {
+      let sum = 0;
+      items = items.map(it => {
+        const calc = calcValue(it.typ, it.betrag, it.mahn);
+        sum += calc;
+        return {
+          ...it,
+          calc,
+          stand: sum
+        };
+      });
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(items));
+    }
+
+    function loadData() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return;
+      try {
+        const arr = JSON.parse(raw);
+        items = Array.isArray(arr) ? arr : [];
+      } catch (e) {
+        items = [];
+      }
+    }
+
+    function saveTypes() {
+      const customTypes = typeDefs.filter(t => !defaultTypes.some(d => d.name === t.name));
+      localStorage.setItem(TYPES_KEY, JSON.stringify(customTypes));
+    }
+
+    function ensureTypeExists(typeName, mode = "negative") {
+      if (!typeDefs.some(t => t.name === typeName)) {
+        typeDefs.push({ name: typeName, mode });
+      }
+    }
+
+    function loadTypes() {
+      typeDefs = [...defaultTypes];
+
+      const raw = localStorage.getItem(TYPES_KEY);
+      if (raw) {
+        try {
+          const arr = JSON.parse(raw);
+          if (Array.isArray(arr)) {
+            for (const t of arr) {
+              if (t && t.name && !typeDefs.some(x => x.name === t.name)) {
+                typeDefs.push({
+                  name: t.name,
+                  mode: t.mode === "positive" ? "positive" : "negative"
+                });
+              }
+            }
+          }
+        } catch (e) {}
+      }
+
+      rebuildTypeDropdown();
+      renderTypeList();
+    }
+
+    function rebuildTypeDropdown(selected = "") {
+      itemTyp.innerHTML = "";
+
+      typeDefs.forEach(t => {
+        const opt = document.createElement("option");
+        opt.value = t.name;
+        opt.textContent = t.name;
+        itemTyp.appendChild(opt);
+      });
+
+      if (selected && typeDefs.some(t => t.name === selected)) {
+        itemTyp.value = selected;
+      } else if (typeDefs.length) {
+        itemTyp.value = typeDefs[0].name;
+      }
+    }
+
+    function renderTypeList() {
+      if (!typeDefs.length) {
+        typeList.innerHTML = "";
+        return;
+      }
+
+      typeList.innerHTML = typeDefs
+        .map(t => {
+          let txt = "";
+          if (t.mode === "positive") txt = "positiv";
+          else if (t.mode === "negative") txt = "negativ";
+          else txt = "mit Mahngebühr";
+          return `<span class="type-chip">${escapeHtml(t.name)} (${escapeHtml(txt)})</span>`;
+        })
+        .join("");
+    }
+
+    function addNewType() {
+      const name = newTyp.value.trim();
+      const mode = newTypMode.value;
+
+      if (!name) {
+        alert("Bitte einen Typ eingeben.");
+        return;
+      }
+
+      const exists = typeDefs.some(t => t.name.toLowerCase() === name.toLowerCase());
+      if (exists) {
+        alert("Dieser Typ ist bereits vorhanden.");
+        return;
+      }
+
+      typeDefs.push({ name, mode });
+      saveTypes();
+      rebuildTypeDropdown(name);
+      renderTypeList();
+      updateTypState();
+
+      newTyp.value = "";
+      newTypMode.value = "negative";
+    }
+
+    function updateTypState() {
+      const mode = getTypeMode(itemTyp.value);
+      if (mode === "fee" || itemTyp.value === "Ruecklastschrift") {
+        itemMahn.disabled = false;
+      } else {
+        itemMahn.disabled = true;
+        itemMahn.value = "";
+      }
+      updateZwischenstand();
+    }
+
+    function updateZwischenstand() {
+      const curr = getCurrentSum();
+      const b = num(itemBetrag.value);
+      const m = num(itemMahn.value);
+      const hasAmount = itemBetrag.value.trim() !== "";
+      const calc = calcValue(itemTyp.value, b, m);
+      const neu = curr + calc;
+
+      txtZwischen.textContent = euro(neu);
+      txtDiff.textContent = hasAmount ? `(${calc > 0 ? "+" : ""}${euro(calc, false)})` : "";
+      txtDiff.style.color = calc >= 0 ? "green" : "red";
+    }
+
+    function clearForm(keepDate = true) {
+      editIndex = -1;
+      itemName.value = "";
+      itemBetrag.value = "";
+      itemMahn.value = "";
+
+      rebuildTypeDropdown(itemTyp.value || "Aufladung");
+      btnAdd.textContent = "+ Hinzufügen";
+      btnCancel.classList.add("hidden");
+
+      if (!keepDate) setToday();
+      updateTypState();
+      updateZwischenstand();
+    }
+
+    function renderTable() {
+      tableBody.innerHTML = "";
+      recalcStands();
+
+      items.forEach((it, index) => {
+        const tr = document.createElement("tr");
+        if (index === selectedIndex) tr.classList.add("selected");
+
+        tr.innerHTML = `
+          <td>${escapeHtml(formatDateDE(it.datum))}</td>
+          <td class="left">${escapeHtml(it.name)}</td>
+          <td>${escapeHtml(it.typ)}</td>
+          <td>${escapeHtml(euro(Math.abs(it.betrag)))}</td>
+          <td>${it.mahn ? escapeHtml(euro(Math.abs(it.mahn))) : ""}</td>
+          <td>${escapeHtml(euro(it.calc))}</td>
+          <td><strong>${escapeHtml(euro(it.stand || 0))}</strong></td>
+        `;
+
+        tr.addEventListener("click", () => {
+          selectedIndex = index;
+          renderTable();
+        });
+
+        tr.addEventListener("dblclick", () => {
+          loadIntoForm(index);
+        });
+
+        tableBody.appendChild(tr);
+      });
+
+      updateSum();
+    }
+
+    function updateSum() {
+      const total = getCurrentSum();
+      anzeigeSumme.textContent = euro(total);
+      anzeigeSumme.style.color = total >= 0 ? "#2e7d32" : "#c62828";
+    }
+
+    function addOrUpdateItem() {
+      const datum = itemDatum.value;
+      const name = itemName.value.trim();
+      const typ = itemTyp.value;
+      const betragRaw = itemBetrag.value.trim();
+      const mahnRaw = itemMahn.value.trim();
+
+      if (!name || !betragRaw) {
+        alert("Bitte Bezeichnung und Betrag eingeben!");
+        return;
+      }
+
+      ensureTypeExists(typ, "negative");
+
+      const betrag = Math.abs(num(betragRaw));
+      const mahn = getTypeMode(typ) === "fee" ? Math.abs(num(mahnRaw)) : 0;
+      const calc = calcValue(typ, betrag, mahn);
+
+      const entry = {
+        datum,
+        name,
+        typ,
+        betrag,
+        mahn,
+        calc
+      };
+
+      if (editIndex >= 0) {
+        items[editIndex] = entry;
+      } else {
+        items.push(entry);
+      }
+
+      selectedIndex = -1;
+      recalcStands();
+      saveData();
+      renderTable();
+      clearForm(true);
+    }
+
+    function loadIntoForm(index) {
+      const it = items[index];
+      if (!it) return;
+
+      ensureTypeExists(it.typ, "negative");
+      rebuildTypeDropdown(it.typ);
+
+      editIndex = index;
+      itemDatum.value = it.datum || "";
+      itemName.value = it.name || "";
+      itemTyp.value = it.typ || "Aufladung";
+      itemBetrag.value = String(it.betrag ?? "").replace(".", ",");
+      itemMahn.value = it.mahn ? String(it.mahn).replace(".", ",") : "";
+
+      updateTypState();
+
+      btnAdd.textContent = "Änderung speichern";
+      btnCancel.classList.remove("hidden");
+
+      updateZwischenstand();
+      itemName.focus();
+    }
+
+    function deleteSelected() {
+      if (selectedIndex < 0 || selectedIndex >= items.length) {
+        alert("Bitte zuerst eine Zeile markieren.");
+        return;
+      }
+
+      items.splice(selectedIndex, 1);
+      selectedIndex = -1;
+      recalcStands();
+      saveData();
+      renderTable();
+      updateZwischenstand();
+    }
+
+    function clearAll() {
+      if (!items.length) return;
+      if (!confirm("Wirklich alle Einträge löschen?")) return;
+
+      items = [];
+      selectedIndex = -1;
+      saveData();
+      renderTable();
+      updateZwischenstand();
+    }
+
+    function exportCsv() {
+      if (!items.length) {
+        alert("Keine Daten zum Exportieren vorhanden.");
+        return;
+      }
+
+      const header = [
+        "Datum",
+        "Bezeichnung",
+        "Typ",
+        "Betrag",
+        "Mahnung",
+        "Rechenwert",
+        "Stand"
+      ];
+
+      const lines = [header];
+
+      items.forEach(it => {
+        lines.push([
+          formatDateDE(it.datum),
+          it.name,
+          it.typ,
+          euro(Math.abs(it.betrag)),
+          it.mahn ? euro(Math.abs(it.mahn)) : "",
+          String(it.calc).replace(".", ","),
+          euro(it.stand || 0)
+        ]);
+      });
+
+      const csv = lines
+        .map(row => row.map(v => `"${String(v).replace(/"/g, '""')}"`).join(";"))
+        .join("\r\n");
+
+      // BOM wichtig für Excel, damit € und Umlaute korrekt erkannt werden
+      const blob = new Blob(
+        ["\uFEFF" + csv],
+        { type: "text/csv;charset=utf-8;" }
+      );
+
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "ausgaben_liste.csv";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+    }
+
+    function parseCsvLine(line) {
+      const result = [];
+      let current = "";
+      let inQuotes = false;
+
+      for (let i = 0; i < line.length; i++) {
+        const ch = line[i];
+        const next = line[i + 1];
+
+        if (ch === '"' && inQuotes && next === '"') {
+          current += '"';
+          i++;
+          continue;
+        }
+
+        if (ch === '"') {
+          inQuotes = !inQuotes;
+          continue;
+        }
+
+        if (ch === ";" && !inQuotes) {
+          result.push(current);
+          current = "";
+          continue;
+        }
+
+        current += ch;
+      }
+
+      result.push(current);
+      return result;
+    }
+
+    function importCsvText(text) {
+      const rows = text.split(/\r?\n/).filter(Boolean);
+      if (!rows.length) return;
+
+      const parsed = [];
+      const startIndex = rows[0].includes("Datum") ? 1 : 0;
+
+      for (let i = startIndex; i < rows.length; i++) {
+        const cols = parseCsvLine(rows[i]);
+        if (cols.length < 6) continue;
+
+        const datum = parseDateToISO(cols[0].trim().replace(/^"|"$/g, ""));
+        const name  = cols[1].trim().replace(/^"|"$/g, "");
+        const typ   = cols[2].trim().replace(/^"|"$/g, "");
+        const betrag = Math.abs(num(cols[3].trim().replace(/^"|"$/g, "")));
+        const mahn   = Math.abs(num(cols[4].trim().replace(/^"|"$/g, "")));
+
+        ensureTypeExists(typ, "negative");
+
+        parsed.push({
+          datum,
+          name,
+          typ,
+          betrag,
+          mahn,
+          calc: 0,
+          stand: 0
+        });
+      }
+
+      saveTypes();
+      rebuildTypeDropdown(itemTyp.value);
+      renderTypeList();
+
+      items = parsed;
+      recalcStands();
+      saveData();
+      renderTable();
+      updateZwischenstand();
+    }
+
+    function exportPdf() {
+      if (!items.length) {
+        alert("Liste ist leer!");
+        return;
+      }
+
+      recalcStands();
+
+      const rows = items.map(it => {
+        const cls = (it.calc || 0) >= 0 ? "pos" : "neg";
+        return `
+          <tr class="${cls}">
+            <td>${escapeHtml(formatDateDE(it.datum))}</td>
+            <td class="l">${escapeHtml(it.name)}</td>
+            <td>${escapeHtml(it.typ)}</td>
+            <td>${escapeHtml(euro(it.calc))}</td>
+            <td><b>${escapeHtml(euro(it.stand || 0))}</b></td>
+          </tr>
+        `;
+      }).join("");
+
+      const total = euro(getCurrentSum());
+
+      const html = `
+        <!DOCTYPE html>
+        <html lang="de">
+        <head>
+          <meta charset="UTF-8">
+          <title>Zahlungsaufstellung</title>
+          <style>
+            body{font-family:Segoe UI, Arial, sans-serif; padding:30px;}
+            table{border-collapse:collapse; width:100%;}
+            th,td{border:1px solid #ccc; padding:6px; text-align:right;}
+            th{background:#eee;}
+            .l{text-align:left;}
+            .pos{color:green;}
+            .neg{color:red;}
+          </style>
+        </head>
+        <body>
+          <h1>Zahlungsaufstellung</h1>
+          <table>
+            <tr>
+              <th>Datum</th>
+              <th class="l">Bezeichnung</th>
+              <th>Typ</th>
+              <th>Rechenwert</th>
+              <th>Stand</th>
+            </tr>
+            ${rows}
+          </table>
+          <hr>
+          <h3>Gesamt-Saldo: ${escapeHtml(total)}</h3>
+        </body>
+        </html>
+      `;
+
+      const w = window.open("", "_blank");
+      if (!w) {
+        alert("Popup blockiert. Bitte Popups für diese Seite erlauben.");
+        return;
+      }
+
+      w.document.open();
+      w.document.write(html);
+      w.document.close();
+      w.focus();
+
+      setTimeout(() => {
+        w.print();
+      }, 300);
+    }
+
+    btnAdd.addEventListener("click", addOrUpdateItem);
+    btnCancel.addEventListener("click", () => clearForm(true));
+    btnDelete.addEventListener("click", deleteSelected);
+    btnClear.addEventListener("click", clearAll);
+    btnPdf.addEventListener("click", exportPdf);
+    btnExportCsv.addEventListener("click", exportCsv);
+
+    btnImportCsv.addEventListener("click", () => csvFile.click());
+
+    csvFile.addEventListener("change", (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = () => importCsvText(reader.result);
+      reader.readAsText(file, "UTF-8");
+      csvFile.value = "";
+    });
+
+    btnAddTyp.addEventListener("click", addNewType);
+
+    newTyp.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+        addNewType();
+      }
+    });
+
+    itemTyp.addEventListener("change", updateTypState);
+    itemBetrag.addEventListener("input", updateZwischenstand);
+    itemMahn.addEventListener("input", updateZwischenstand);
+
+    window.addEventListener("load", () => {
+      setToday();
+      loadTypes();
+      loadData();
+
+      // Sicherstellen, dass importierte/alte Typen auch im Dropdown vorhanden sind
+      items.forEach(it => ensureTypeExists(it.typ, "negative"));
+      saveTypes();
+      rebuildTypeDropdown("Aufladung");
+      renderTypeList();
+
+      recalcStands();
+      renderTable();
+      updateTypState();
+      updateZwischenstand();
+    });
+  </script>
 </body>
 </html>
